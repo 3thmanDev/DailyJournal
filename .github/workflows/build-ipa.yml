@@ -36,6 +36,9 @@ jobs:
       - name: Package IPA
         run: |
           APP_PATH="build/Build/Products/Release-iphoneos/DailyJournal.app"
+          # Without a launch screen iOS runs the app letterboxed at the old 3.5" size.
+          test -d "$APP_PATH/LaunchScreen.storyboardc"
+          plutil -p "$APP_PATH/Info.plist" | grep UILaunch
           codesign --force --sign - --timestamp=none "$APP_PATH"
           mkdir -p output/Payload
           cp -R "$APP_PATH" output/Payload/
